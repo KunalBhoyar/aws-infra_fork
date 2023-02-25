@@ -1,11 +1,14 @@
 
+variable "ami_id" {
+  type = string
+}
 
 
 ## Adding Security  Group Rules
 
 resource "aws_security_group" "my-security-group" {
   name_prefix = "my-security-group"
-  
+
 
   ingress {
     from_port   = 443
@@ -26,9 +29,9 @@ resource "aws_security_group" "my-security-group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    from_port = 5000
-    to_port = 5000
-    protocol = "tcp"
+    from_port   = 5000
+    to_port     = 5000
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
@@ -46,11 +49,11 @@ resource "aws_security_group" "my-security-group" {
 
 
 resource "aws_instance" "my-ec2-instance" {
-  ami           = "ami-0b615019f0d0d7ca8"
-  instance_type = "t2.micro"
+  ami                    = var.ami_id
+  instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.my-security-group.id]
-  subnet_id = aws_subnet.public_subnet[0].id
-  key_name      = "ec2"
+  subnet_id              = aws_subnet.public_subnet[0].id
+  key_name               = "ec2"
   security_groups = [
     aws_security_group.my-security-group.id
   ]
