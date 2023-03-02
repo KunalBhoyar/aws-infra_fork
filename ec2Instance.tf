@@ -1,12 +1,12 @@
 
-variable "ami_id" {
+variable "ami_name" {
   type = string
 }
 
 
 ## Adding Security  Group Rules
 
-resource "aws_security_group" "my-security-group" {
+resource "aws_security_group" "ec2-security-group" {
   name_prefix = "my-security-group"
 
 
@@ -47,16 +47,36 @@ resource "aws_security_group" "my-security-group" {
 }
 
 
-
 resource "aws_instance" "my-ec2-instance" {
-  ami                    = var.ami_id
-  instance_type          = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.my-security-group.id]
+  ami           = var.ami_name
+  instance_type = "t2.micro"
+  user_data     = <<-EOF
+    #!/bin/bash
+    cd /home/ec2-user/
+    touch .env
+    echo DATABASE_URL="mysql://${var.db_username}:${var.db_password}@${aws_db_instance.mydb.endpoint}" >> .env
+    echo S3_Bucket_Name="${aws_s3_bucket.private_bucket.id}" >> .env
+    echo APP_HOST="0.0.0.0" >> .env
+    echo APP_PORT="5000" >> .env
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable webapp
+    sudo systemctl start webapp
+    EOF
+
+  vpc_security_group_ids = [aws_security_group.ec2-security-group.id]
   subnet_id              = aws_subnet.public_subnet[0].id
   key_name               = "ec2"
+  iam_instance_profile   = aws_iam_instance_profile.webapp_s3_instance_profile.name
+
   security_groups = [
-    aws_security_group.my-security-group.id
+    aws_security_group.ec2-security-group.id
   ]
+
+  depends_on = [
+    aws_db_instance.mydb
+  ]
+
   root_block_device {
     volume_size = 8
     volume_type = "gp2"
@@ -64,4 +84,4 @@ resource "aws_instance" "my-ec2-instance" {
   tags = {
     Name = "My EC2 Instance"
   }
-}   
+}

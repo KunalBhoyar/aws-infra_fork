@@ -1,4 +1,6 @@
 inst_region="us-east-1"
-ami_id="ami-0c0f0243a007f3b6b"
+ami_name="ami-08e9fc7443d6e94b1"
 profile="dev"
 vpc_name="vpc-1"
+db_username = "csye6225"
+db_password = "Welcome22!"
