@@ -21,6 +21,12 @@ resource "aws_security_group" "rds-security-group" {
   }
 }
 
+
+
+resource "aws_db_parameter_group" "db_param"{
+  family = "mysql8.0"
+}
+
 resource "aws_db_subnet_group" "example" {
   name = "main"
 
@@ -35,13 +41,14 @@ resource "aws_db_instance" "mydb" {
   allocated_storage = 10
   db_name           = "webapp"
   engine            = "mysql"
-  engine_version    = "5.7"
+  engine_version    = "8.0.26"
   instance_class    = "db.t3.micro"
   username          = var.db_username
   password          = var.db_password
   skip_final_snapshot    = true
   vpc_security_group_ids = [aws_security_group.rds-security-group.id]
   db_subnet_group_name   = aws_db_subnet_group.example.id
+  parameter_group_name   = aws_db_parameter_group.db_param.name
   multi_az               = false
   tags = {
     "Name" = "CSYE-6225"
