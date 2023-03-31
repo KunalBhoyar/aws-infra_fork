@@ -1,10 +1,10 @@
 inst_region="us-east-1"
-ami_name="ami-0ee62ba25530502d2"
-profile="demo"
+ami_name="ami-0f58f0d1db3bf4659"
+profile="dev"
 vpc_name="vpc-1"
 db_username = "csye6225"
 db_password = "Welcome22!"
-zone_id =  "Z00240193N9Q1N3RL9835"
-domain  = "prod.kunaaa.me"
+zone_id =  "Z0899375IU3UK2CHV27Q"
+domain  = "dev.kunaaa.me"
 
 
