@@ -81,7 +81,7 @@ resource "aws_launch_template" "ec2-template" {
     #!/bin/bash
     cd /home/ec2-user/
     touch .env
-    echo DB_URL="mysql://${var.db_username}:${var.db_password}@${aws_db_instance.mydb.endpoint}" >> .env
+    echo DATABASE_URL="mysql://${var.db_username}:${var.db_password}@${aws_db_instance.mydb.endpoint}" >> .env
     echo S3_Bucket_Name="${aws_s3_bucket.private_bucket.id}" >> .env
     echo APP_HOST="0.0.0.0" >> .env
     echo APP_PORT="5000" >> .env
