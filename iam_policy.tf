@@ -13,7 +13,7 @@ resource "aws_iam_policy" "webapp_s3" {
           "s3:Put*",
           "s3:Delete*"
         ]
-        Resource: [
+        Resource : [
           aws_s3_bucket.private_bucket.arn,
           "${aws_s3_bucket.private_bucket.arn}/*"
         ]
